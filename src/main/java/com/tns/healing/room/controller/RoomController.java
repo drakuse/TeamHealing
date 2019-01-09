@@ -25,10 +25,10 @@ public class RoomController {
 	 * "boardForm"; }
 	 */
 
-	@RequestMapping(value = "/lodgmentForm", method = RequestMethod.GET)
+	@RequestMapping(value = "/test", method = RequestMethod.GET)
 	public String lodgment() {
 		System.out.println("home 메소드 호출");
-		return "room/lodgmentForm";
+		return "test";
 //		return "boardForm"; 
 	}
 }

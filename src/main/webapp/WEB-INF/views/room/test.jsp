@@ -7,7 +7,6 @@
 <title>Insert title here</title>
 </head>
 <body>
-<a href="test">테스트</a>
 
 </body>
 </html>
