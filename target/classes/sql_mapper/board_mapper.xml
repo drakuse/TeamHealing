@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Board">
+	<!-- 글쓰기 -->
+	<insert id="boardWrite" parameterType="board"
+		useGeneratedKeys="true" keyProperty="INFO_NUM">
+		INSERT INTO INFO VALUES(
+		INFO_SEQ.nextval,
+		#{MEMBER_ID},#{INFO_TITLE},
+		#{INFO_CONTENT}, 0, 0, 0, sysdate, #{INFO_IMAGE_NAME}
+		)
+		<selectKey keyProperty="INFO_NUM" resultType="int"
+			order="AFTER">
+			SELECT
+			INFO_SEQ.CURRVAL FROM DUAL
+		</selectKey>
+	</insert>
+
+	<!-- 글 목록 -->
+	<select id="boardForm" parameterType="page" resultType="board">
+		SELECT
+		BOARDLIST.*, BOARDLIST.RN FROM BOARDLIST WHERE
+		BOARDLIST.RN BETWEEN
+		#{startRow} AND #{endRow}
+	</select>
+
+	<!-- 조회수 카운트 -->
+	<update id="boardUpdate" parameterType="int">
+		UPDATE INFO SET
+		INFO_HIT=INFO_HIT+1 WHERE INFO_NUM=#{INFO_NUM}
+	</update>
+
+	<!-- 게시판 글 상세보기 -->
+	<select id="boardDetail" parameterType="int" resultType="board">
+		SELECT *
+		FROM INFO WHERE INFO_NUM=#{INFO_NUM}
+	</select>
+
+	<!-- 게시판 글 수정하기 -->
+	<update id="boardModify" parameterType="board">
+		UPDATE
+		INFO SET
+		INFO_TITLE=#{INFO_TITLE},
+		INFO_CONTENT=#{INFO_CONTENT},
+		INFO_IMAGE_NAME=#{INFO_IMAGE_NAME}
+		WHERE
+		INFO_NUM=#{INFO_NUM}
+	</update>
+
+	<!-- 게시판 글 삭제 -->
+	<delete id="boardDelete" parameterType="board">
+		DELETE INFO WHERE
+		INFO_NUM=#{INFO_NUM}
+	</delete>
+
+	<!-- 게시판 글 추천 확인 쿼리 -->
+	<select id="boardLikeCheck" resultType="boardCount">
+		SELECT * FROM INFO_COUNT
+		WHERE MEMBER_ID=#{MEMBER_ID} AND INFO_NUM=#{INFO_NUM} AND
+		INFO_REVIEW_NUM='0' AND
+		INFO_LIKE='1'
+	</select>
+
+	<!-- 게시판 글 추천 카운트 디비 쿼리(INFO_COUNT) -->
+	<insert id="boardLikeCountInsert" parameterType="boardCount">
+		INSERT INTO
+		INFO_COUNT VALUES(
+		#{MEMBER_ID},#{INFO_NUM},#{INFO_REVIEW_NUM},1,0
+		)
+	</insert>
+
+	<!-- 게시글 추천 쿼리(INFO) -->
+	<update id="boardLikeInsert" parameterType="boardCount">
+		UPDATE INFO SET
+		INFO_LIKE=INFO_LIKE+1 WHERE INFO_NUM=#{INFO_NUM}
+	</update>
+
+	<!-- 게시판 글 신고 확인 쿼리 -->
+	<select id="boardReportCheck" resultType="boardCount">
+		SELECT * FROM
+		INFO_COUNT
+		WHERE MEMBER_ID=#{MEMBER_ID} AND INFO_NUM=#{INFO_NUM} AND
+		INFO_REVIEW_NUM='0' AND
+		INFO_REPORT='1'
+	</select>
+
+	<!-- 게시판 글 신고 카운트 디비 쿼리(INFO_COUNT) -->
+	<insert id="boardReportCountInsert" parameterType="boardCount">
+		INSERT INTO
+		INFO_COUNT VALUES(
+		#{MEMBER_ID},#{INFO_NUM},#{INFO_REVIEW_NUM},0,1
+		)
+	</insert>
+
+	<!-- 게시글 신고 쿼리(INFO) -->
+	<update id="boardReportInsert" parameterType="boardCount">
+		UPDATE INFO SET
+		INFO_REPORT=INFO_REPORT+1 WHERE INFO_NUM=#{INFO_NUM}
+	</update>
+
+	<!-- 게시판 댓글 전체 목록 -->
+	<select id="reviewRead" parameterType="int"
+		resultType="BoardReview">
+		SELECT * FROM INFO_REVIEW WHERE INFO_NUM=#{INFO_NUM} ORDER
+		BY INFO_REVIEW_LEV ASC, INFO_REVIEW_NUM ASC
+	</select>
+
+	<!-- 게시판 댓글 조회 -->
+	<select id="searchReview" parameterType="BoardReview"
+		resultType="BoardReview">
+		SELECT MAX(INFO_REVIEW_NUM) AS INFO_REVIEW_NUM,
+		MAX(INFO_REVIEW_LEV) AS INFO_REVIEW_LEV
+		FROM INFO_REVIEW
+		WHERE
+		INFO_NUM=#{INFO_NUM}
+	</select>
+
+	<!-- 부모 댓글 정보 가져오기 -->
+	<select id="reviewReplySearch" parameterType="BoardReview"
+		resultType="BoardReview">
+		SELECT *
+		FROM INFO_REVIEW
+		WHERE
+		INFO_REVIEW_NUM=#{INFO_REVIEW_NUM}
+	</select>
+
+	<!-- 상세 게시판 댓글 달기 -->
+	<insert id="reviewInsert" parameterType="boardReview"
+		useGeneratedKeys="true" keyProperty="INFO_REVIEW_NUM">
+		INSERT INTO
+		INFO_REVIEW
+		VALUES(
+		#{INFO_NUM},#{MEMBER_ID},#{INFO_REVIEW_CONTENT},INFO_REVIEW_SEQ.nextval,#{INFO_REVIEW_LEV},#{INFO_REVIEW_SEQ},
+		0, 0, sysdate
+		)
+		<selectKey keyProperty="INFO_REVIEW_NUM" resultType="int"
+			order="AFTER">
+			SELECT
+			INFO_REVIEW_SEQ.CURRVAL FROM DUAL
+		</selectKey>
+	</insert>
+
+	<!-- 부모 댓글의 답글 달기 -->
+	<insert id="reviewReplyInsert" parameterType="boardReview"
+		useGeneratedKeys="true" keyProperty="INFO_REVIEW_NUM">
+		INSERT INTO INFO_REVIEW VALUES(
+		#{INFO_NUM},#{MEMBER_ID},#{INFO_REVIEW_CONTENT},INFO_REVIEW_SEQ.nextval,#{INFO_REVIEW_LEV},#{INFO_REVIEW_SEQ},
+		0, 0, sysdate
+		)
+		<selectKey keyProperty="INFO_REVIEW_NUM" resultType="int"
+			order="AFTER">
+			SELECT
+			INFO_REVIEW_SEQ.CURRVAL FROM DUAL
+		</selectKey>
+	</insert>
+
+	<!-- 스크랩 처리 -->
+	<insert id="boardScrap" parameterType="boardScrap">
+		INSERT INTO INFO_SCRAP
+		VALUES(
+		#{MEMBER_ID}, #{INFO_NUM}, #{INFO_TITLE}, sysdate
+		)
+	</insert>
+
+	<!-- 스크랩 확인 여부 -->
+	<select id="searchScrap" parameterType="boardScrap"
+		resultType="boardScrap">
+		SELECT * FROM INFO_SCRAP WHERE MEMBER_ID=#{MEMBER_ID} AND
+		INFO_NUM=#{INFO_NUM}
+	</select>
+
+	<!-- 원본 댓글과 답글까지 삭제 -->
+	<delete id="reviewReplyDelete" parameterType="boardReview">
+		DELETE INFO_REVIEW
+		WHERE
+		INFO_REVIEW_LEV=#{INFO_REVIEW_LEV}
+	</delete>
+
+	<!-- 답글 삭제 요청 -->
+	<delete id="reviewDelete" parameterType="boardReview">
+		DELETE INFO_REVIEW
+		WHERE
+		INFO_REVIEW_NUM=#{INFO_REVIEW_NUM}
+	</delete>
+
+	<!-- 댓글 수정 요청 -->
+	<update id="reviewModify" parameterType="boardReview">
+		UPDATE
+		INFO_REVIEW SET
+		INFO_REVIEW_CONTENT=#{INFO_REVIEW_CONTENT}
+		WHERE
+		INFO_REVIEW_NUM=#{INFO_REVIEW_NUM}
+	</update>
+
+	<!-- 게시글 댓글 추천 확인 쿼리 -->
+	<select id="boardLikeReviewCheck" resultType="boardCount">
+		SELECT * FROM
+		INFO_COUNT
+		WHERE MEMBER_ID=#{MEMBER_ID} AND INFO_NUM=#{INFO_NUM} AND
+		INFO_REVIEW_NUM=#{INFO_REVIEW_NUM} AND
+		INFO_LIKE='1'
+	</select>
+
+	<!-- 게시글 댓글 추천 쿼리(INFO_REVIEW) -->
+	<update id="boardLikeReviewInsert" parameterType="boardCount">
+		UPDATE
+		INFO_REVIEW SET
+		INFO_REVIEW_LIKE=INFO_REVIEW_LIKE+1 WHERE
+		INFO_REVIEW_NUM=#{INFO_REVIEW_NUM}
+	</update>
+
+	<!-- 게시글 댓글 신고 확인 쿼리 -->
+	<select id="boardReportReviewCheck" resultType="boardCount">
+		SELECT * FROM
+		INFO_COUNT
+		WHERE MEMBER_ID=#{MEMBER_ID} AND INFO_NUM=#{INFO_NUM} AND
+		INFO_REVIEW_NUM=#{INFO_REVIEW_NUM} AND
+		INFO_REPORT='1'
+	</select>
+
+	<!-- 게시글 댓글 신고 쿼리(INFO_REVIEW) -->
+	<update id="boardReportReviewInsert" parameterType="boardCount">
+		UPDATE
+		INFO_REVIEW SET
+		INFO_REVIEW_REPORT=INFO_REVIEW_REPORT+1 WHERE
+		INFO_REVIEW_NUM=#{INFO_REVIEW_NUM}
+	</update>
+
+	<!-- 게시판 삭제 시 댓글 전부 삭제 -->
+	<delete id="boardReviewDelete" parameterType="boardReview">
+		DELETE INFO_REVIEW
+		WHERE
+		INFO_NUM=#{INFO_NUM}
+	</delete>
+
+	<!-- 게시판 삭제 시 댓글 추천,신고 확인 DB 삭제 -->
+	<delete id="boardReviewCountDelete" parameterType="boardCount">
+		DELETE
+		INFO_COUNT WHERE INFO_NUM=#{INFO_NUM}
+	</delete>
+
+	<!-- 스크랩 삭제 처리 -->
+	<delete id="scrapDelete" parameterType="int">
+		DELETE INFO_SCRAP WHERE
+		INFO_NUM=#{INFO_NUM}
+	</delete>
+
+	<!-- 글 갯수 처리 -->
+	<select id="listCount" resultType="int">
+		SELECT COUNT(*) FROM INFO
+	</select>
+
+	<!-- 게시판 검색 -->
+	<select id="boardSearch" parameterType="page" resultType="board">
+		SELECT
+		* FROM (SELECT ROWNUM AS RNUM, BOARDLIST.* FROM
+		BOARDLIST where
+		INFO_TITLE LIKE #{search}) A
+		WHERE A.RNUM between
+		#{startRow} and
+		#{endRow}
+	</select>
+
+	<!-- 검색한 글 갯수 카운트 -->
+	<select id="listSearchCount" resultType="int">
+		SELECT COUNT(*) FROM
+		INFO WHERE INFO_TITLE LIKE #{search}
+	</select>
+
+	<!-- 베스트 정보 글 -->
+	<select id="boardBest" resultType="board">
+		SELECT * FROM INFO WHERE
+		INFO_LIKE<![CDATA[>]]>=5
+	</select>
+</mapper>

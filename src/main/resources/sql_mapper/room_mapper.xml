@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="Room">
+	<!-- -->
+	<select id="companyNum" resultType="String">
+		SELECT MAX(COMPANY_NUM) FROM
+		COMPANY
+	</select>
+	<insert id="companyInsert" parameterType="company">
+		INSERT INTO COMPANY
+		VALUES(#{COMPANY_NUM},
+		#{COMPANY_NAME},#{MEMBER_ID},#{COMPANY_POSTCODE},#{COMPANY_ADDRESS},
+		#{COMPANY_DETAILADDRESS}, #{COMPANY_IMAGENAME}, 0)
+	</insert>
+	<select id="companyList" parameterType="String"
+		resultType="company">
+		SELECT * FROM COMPANY WHERE MEMBER_ID=#{MEMBER_ID}
+	</select>
+	<select id="roomJoinForm" parameterType="int"
+		resultType="company">
+		SELECT * FROM COMPANY WHERE COMPANY_NUM=#{COMPANY_NUM}
+	</select>
+	<select id="roomNum" resultType="String">
+		SELECT MAX(ROOM_NUM) FROM
+		ROOM
+	</select>
+	<insert id="roomInsert" parameterType="room">
+		INSERT INTO room
+		VALUES(#{COMPANY_NUM},
+		#{ROOM_NUM},#{ROOM_SEQ},#{ROOM_NAME},#{ROOM_IMAGENAME},#{ROOM_LIMIT},#{ROOM_PRICE}
+		)
+	</insert>
+	<select id="roomList" parameterType="int" resultType="room">
+		SELECT *
+		FROM ROOM WHERE COMPANY_NUM=#{COMPANY_NUM}
+	</select>
+	<select id="roomSeq" resultType="String" parameterType="room">
+		SELECT
+		MAX(ROOM_SEQ) FROM
+		ROOM WHERE COMPANY_NUM=#{COMPANY_NUM}
+	</select>
+	<select id="companySearch" parameterType="page"
+		resultType="company">
+		SELECT * FROM (SELECT ROWNUM AS RNUM, COMPANY.* FROM
+		COMPANY where company_address like #{region} AND COMPANY_APPROVE=1
+		) A
+		WHERE RNUM between
+		#{startRow} and #{endRow}
+	</select>
+	<select id="roomSearch" parameterType="search" resultType="room">
+		SELECT *
+		FROM ROOM WHERE COMPANY_NUM=#{company_num}
+	</select>
+	<select id="bookCheck" parameterType="search" resultType="book">
+		SELECT
+		*FROM BOOK WHERE ROOM_NUM=#{room_num}
+		AND( (BOOK_CHECKIN BETWEEN
+		#{checkIn} AND #{checkOut})
+		OR (BOOK_CHECKOUT BETWEEN #{checkIn} AND
+		#{checkOut})
+		OR (#{checkIn} BETWEEN BOOK_CHECKIN AND BOOK_CHECKOUT))
+	</select>
+
+	<select id="getBookNum" resultType="String">
+		SELECT MAX(BOOK_NUM) FROM
+		BOOK
+	</select>
+	<insert id="joinBook" parameterType="book">
+		INSERT INTO BOOK
+		VALUES(#{BOOK_NUM},#{ROOM_NUM},#{COMPANY_NUM},#{MEMBER_ID},
+		#{BOOK_CHECKIN},#{BOOK_CHECKOUT},#{BOOK_PRICE})
+	</insert>
+	<select id="bookList" parameterType="String" resultType="book">
+		SELECT *
+		FROM BOOK WHERE MEMBER_ID=#{MEMBER_ID}
+	</select>
+	<select id="roomBookList" parameterType="int" resultType="book">
+		SELECT
+		*
+		FROM BOOK WHERE ROOM_NUM=#{ROOM_NUM}
+	</select>
+	<select id="getCompany" parameterType="search"
+		resultType="company">
+		SELECT *
+		FROM COMPANY WHERE COMPANY_NUM=#{company_num}
+	</select>
+	<select id="bookDetailRoom" parameterType="book"
+		resultType="room">
+		SELECT *
+		FROM ROOM WHERE ROOM_NUM=#{ROOM_NUM}
+	</select>
+	<select id="bookDetailCompany" parameterType="book"
+		resultType="company">
+		SELECT *
+		FROM COMPANY WHERE COMPANY_NUM=#{COMPANY_NUM}
+	</select>
+	<select id="bookDetailBook" parameterType="book"
+		resultType="book">
+		SELECT *
+		FROM BOOK WHERE BOOK_NUM=#{BOOK_NUM}
+	</select>
+	<select id="getRoomReviewNum" resultType="String">
+		SELECT
+		MAX(ROOM_REVIEW_NUM) FROM
+		ROOM_REVIEW
+	</select>
+	<insert id="joinRoomReview" parameterType="roomReview">
+		INSERT
+		INTO
+		ROOM_REVIEW
+		VALUES(#{ROOM_REVIEW_NUM},
+		#{BOOK_NUM},#{ROOM_NUM},#{COMPANY_NUM},#{MEMBER_ID},
+		#{ROOM_REVIEW_CONTENT},#{ROOM_REVIEW_IMAGENAME},#{ROOM_REVIEW_SCORE},SYSDATE,0,0
+		)
+	</insert>
+	<select id="reviewCheck" parameterType="int" resultType="String">
+		SELECT
+		ROOM_REVIEW_CONTENT FROM ROOM_REVIEW WHERE BOOK_NUM=#{BOOK_NUM}
+	</select>
+
+	<select id="companyScore" parameterType="int"
+		resultType="double">
+		SELECT
+		AVG(ROOM_REVIEW_SCORE) FROM ROOM_REVIEW WHERE
+		COMPANY_NUM=#{COMPANY_NUM}
+	</select>
+	<select id="roomScore" parameterType="int" resultType="double">
+		SELECT
+		AVG(ROOM_REVIEW_SCORE) FROM ROOM_REVIEW WHERE ROOM_NUM=#{ROOM_NUM}
+	</select>
+	<select id="roomReview" parameterType="int"
+		resultType="roomReview">
+		SELECT * FROM ROOM_REVIEW WHERE ROOM_NUM=#{ROOM_NUM}
+	</select>
+	<select id="companyCount" resultType="int">
+		SELECT COUNT(*) FROM
+		COMPANY
+	</select>
+	<select id="reviewNull" resultType="String" parameterType="int">
+		SELECT ROOM_REVIEW_CONTENT FROM
+		ROOM_REVIEW WHERE
+		COMPANY_NUM=#{COMPANY_NUM} and rownum=1
+	</select>
+	<select id="roomLikeCheck" resultType="String"
+		parameterType="roomCount">
+		SELECT MEMBER_ID FROM
+		ROOM_REVIEW_COUNT WHERE
+		ROOM_REVIEW_NUM=#{ROOM_REVIEW_NUM} and ROOM_LIKE=1
+	</select>
+	<select id="roomRefuseCheck" resultType="String"
+		parameterType="roomCount">
+		SELECT MEMBER_ID FROM
+		ROOM_REVIEW_COUNT WHERE
+		ROOM_REVIEW_NUM=#{ROOM_REVIEW_NUM} and ROOM_REPORT=1
+	</select>
+	<insert id="roomLikeUp" parameterType="roomCount">
+		INSERT
+		INTO
+		ROOM_REVIEW_COUNT
+		VALUES(#{MEMBER_ID},
+		#{ROOM_REVIEW_NUM},1,0 )
+	</insert>
+	<update id="roomLikeUpReview" parameterType="int">
+		UPDATE
+		ROOM_REVIEW
+		SET
+		ROOM_REVIEW_LIKE=ROOM_REVIEW_LIKE+1 WHERE
+		ROOM_REVIEW_NUM=#{ROOM_REVIEW_NUM}
+	</update>
+
+	<insert id="roomRefuseUp" parameterType="roomCount">
+		INSERT
+		INTO
+		ROOM_REVIEW_COUNT
+		VALUES(#{MEMBER_ID},
+		#{ROOM_REVIEW_NUM},0,1 )
+	</insert>
+	<update id="roomRefuseUpReview" parameterType="int">
+		UPDATE
+		ROOM_REVIEW
+		SET
+		ROOM_REVIEW_REPORT=ROOM_REVIEW_REPORT+1 WHERE
+		ROOM_REVIEW_NUM=#{ROOM_REVIEW_NUM}
+	</update>
+	<select id="memberMyReviewRoom" parameterType="String"
+		resultType="roomReview">
+		SELECT*FROM ROOM_REVIEW WHERE MEMBER_ID LIKE #{ID}
+	</select>
+
+	<select id="companyApproveList" resultType="company">
+		SELECT*FROM COMPANY
+		WHERE COMPANY_APPROVE = 0
+	</select>
+
+	<update id="companyApprove" parameterType="String">
+		UPDATE COMPANY SET COMPANY_APPROVE=1 WHERE
+		COMPANY_NUM=#{company_num}
+	</update>
+</mapper>

@@ -3,7 +3,47 @@
  "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
 	<typeAliases>
-		<typeAlias alias="room" type="com.tns.healing.room.vo.RoomVO" />
-		<!-- alias = "별칭" -->
+		<!-- 재혁 -->
+		<typeAlias alias="room"
+			type="com.tns.healing.room.vo.RoomVO" />
+		<typeAlias alias="roomCount"
+			type="com.tns.healing.room.vo.RoomCountVO" />
+		<typeAlias alias="book"
+			type="com.tns.healing.room.vo.BookVO" />
+		<typeAlias alias="company"
+			type="com.tns.healing.room.vo.CompanyVO" />
+		<typeAlias alias="search"
+			type="com.tns.healing.room.vo.SearchVO" />
+		<typeAlias alias="roomReview"
+			type="com.tns.healing.room.vo.RoomReviewVO" />
+		<!-- 종성 -->
+		<typeAlias alias="product"
+			type="com.tns.healing.shopping.vo.ProductVO" />
+		<typeAlias alias="cart"
+			type="com.tns.healing.shopping.vo.CartVO" />
+		<typeAlias alias="order"
+			type="com.tns.healing.shopping.vo.OrderVO" />
+		<typeAlias alias="review"
+			type="com.tns.healing.shopping.vo.Product_ReviewVO" />
+		<typeAlias alias="page1"
+			type="com.tns.healing.shopping.vo.PageVO" />
+		<typeAlias alias="page2"
+			type="com.tns.healing.shopping.vo.PageVO2" />
+		<!-- 재일 -->
+		<typeAlias alias="member"
+			type="com.tns.healing.member.vo.MemberVO" />
+		<typeAlias alias="Board"
+			type="com.tns.healing.board.vo.BoardVO" />
+		<typeAlias alias="BoardCount"
+			type="com.tns.healing.board.vo.BoardCountVO" />
+		<typeAlias alias="BoardReview"
+			type="com.tns.healing.board.vo.BoardReviewVO" />
+		<typeAlias alias="BoardScrap"
+			type="com.tns.healing.board.vo.BoardScrapVO" />
+		<typeAlias alias="BoardReview"
+			type="com.tns.healing.board.vo.BoardReviewVO" />
+		<!-- 재혁, 재일 -->
+		<typeAlias alias="page"
+			type="com.tns.healing.page.vo.PageVO" />
 	</typeAliases>
 </configuration>

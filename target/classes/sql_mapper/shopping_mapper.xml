@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Shopping">
+	<!--쇼핑몰 상품리스트 -->
+	<select id="productList" resultType="product">
+		select * from product order
+		by product_num DESC
+	</select>
+	<!--카테고리검색 -->
+	<select id="categorySearch" resultType="product"
+		parameterType="product">
+		select * from product where
+		PRODUCT_CATEGORY=#{PRODUCT_CATEGORY}
+	</select>
+	<!--제목검색 -->
+	<select id="searchText" resultType="product"
+		parameterType="String">
+		select * from product where product_name like
+		#{PRODUCT_NAME}
+	</select>
+	<!--상품상세 -->
+	<select id="productDetail" resultType="product"
+		parameterType="product">
+		select * from product where product_num=#{PRODUCT_NUM}
+	</select>
+	<!--장바구니 등록 -->
+	<insert id="cart" parameterType="cart" useGeneratedKeys="true"
+		keyProperty="ORDER_NUM">
+		insert into cart values(CART_SEQ.nextval,
+		#{PRODUCT_NUM},#{MEMBER_ID},#{PRODUCT_NAME},#{ORDER_AMOUNT},#{ORDER_PRICE},SYSDATE,1
+		)
+		<selectKey keyProperty="ORDER_NUM" resultType="int"
+			order="AFTER">
+			select CART_SEQ.CURRVAL from DUAL
+		</selectKey>
+	</insert>
+	<!--장바구니 목록 -->
+	<select id="cartList" parameterType="cart" resultType="cart">
+		select *
+		from cart where order_division=1 and member_id=#{MEMBER_ID}
+	</select>
+	<!-- 장바구니 구매 -->
+	<select id="cartPurchase" parameterType="cart" resultType="cart">
+		select *
+		from cart where ORDER_NUM=#{ORDER_NUM}
+	</select>
+	<!--장바구니삭제 -->
+	<delete id="delete" parameterType="cart">
+		delete from cart where
+		order_num=#{ORDER_NUM}
+	</delete>
+
+	<!--회원정보 -->
+	<select id="member" parameterType="String" resultType="member">
+		select *
+		from member where member_id like #{MEMBER_ID}
+	</select>
+
+	<!-- 상품 등록 메소드 -->
+	<insert id="productUpdate" parameterType="product"
+		useGeneratedKeys="true" keyProperty="PRODUCT_NUM">
+		INSERT INTO PRODUCT VALUES(
+		#{PRODUCT_NAME},PRODUCT_SEQ.nextval,
+		#{PRODUCT_PRICE},
+		0,#{PRODUCT_IMAGE_NAME},#{PRODUCT_INFO},#{PRODUCT_CATEGORY}
+		)
+		<selectKey keyProperty="PRODUCT_NUM" resultType="int"
+			order="AFTER">
+			SELECT PRODUCT_SEQ.CURRVAL FROM DUAL
+		</selectKey>
+	</insert>
+
+	<!--결제완료시 -->
+	<insert id="kakaoPay" parameterType="cart"
+		useGeneratedKeys="true" keyProperty="ORDER_NUM">
+		insert into cart values(CART_SEQ.nextval,#{PRODUCT_NUM}
+		,#{MEMBER_ID},#{PRODUCT_NAME},#{ORDER_AMOUNT},#{ORDER_PRICE},SYSDATE,2)
+		<selectKey keyProperty="ORDER_NUM" resultType="int"
+			order="AFTER">
+			select CART_SEQ.CURRVAL from DUAL
+		</selectKey>
+	</insert>
+
+	<!--장바구니 물건 결제완료 -->
+	<update id="kakaoPay2" parameterType="cart">
+		update cart set
+		order_division=2 where member_id=#{MEMBER_ID} and
+		order_num=#{ORDER_NUM}
+	</update>
+
+	<!--주문자 정보 -->
+	<insert id="orderInfo" parameterType="order">
+		insert into order_info
+		values(#{PRODUCT_NUM},#{PRODUCT_NAME},#{ORDER_AMOUNT},#{ORDER_PRICE},#{ORDER_NAME},#{ORDER_POSTCODE},#{ORDER_JIBUNADDRESS},
+		#{ORDER_DETAILADDRESS},#{ORDER_PHONE},#{ORDER_REQUIREMENT})
+	</insert>
+
+	<select id="best" parameterType="product" resultType="product">
+		select *
+		from
+		product where product_num=#{PRODUCT_NUM}
+	</select>
+
+	<!-- 상품판매량 업데이트 부분 -->
+	<update id="productBestUpdate" parameterType="product">
+		UPDATE PRODUCT SET
+		PRODUCT_AMOUNT=#{PRODUCT_AMOUNT}
+		WHERE PRODUCT_NUM=#{PRODUCT_NUM}
+	</update>
+
+	<!-- 구매내역 -->
+	<select id="history" parameterType="cart" resultType="cart">
+		select *
+		from cart where member_id=#{MEMBER_ID} and order_division=2 order by
+		order_date DESC
+	</select>
+
+	<!-- purchaseHistory에서 이미지 가져오기위해서 사용했음 -->
+	<select id="productSearch" parameterType="int"
+		resultType="product">
+		select * from product where product_num;
+	</select>
+
+	<select id="products" parameterType="int" resultType="product">
+		select *
+		from product where product_num=#{PRODUCT_NUM}
+	</select>
+
+	<!--상품 정보 가져오기 -->
+	<select id="reviewSearch" parameterType="review"
+		resultType="review">
+		select
+		* from cart where PRODUCT_NUM=#{PRODUCT_NUM} AND
+		MEMBER_ID=#{MEMBER_ID}
+	</select>
+
+	<!--상품리뷰등록 -->
+	<insert id="reviewWrite" parameterType="review"
+		useGeneratedKeys="true" keyProperty="PRODUCT_REVIEW_NUM">
+		insert into product_review
+		values(#{PRODUCT_NUM},#{MEMBER_ID},#{PRODUCT_REVIEW_CONTENT},review_num.nextval,
+		SYSDATE,0,0)
+		<selectKey keyProperty="PRODUCT_REVIEW_NUM" resultType="int"
+			order="AFTER">
+			select review_num.currval from dual
+		</selectKey>
+	</insert>
+	<select id="overlap" parameterType="review" resultType="review">
+		select *
+		from overlapcheck where member_id=#{MEMBER_ID} and
+		product_num=#{PRODUCT_NUM}
+	</select>
+
+	<insert id="overlapinsert" parameterType="review">
+		insert into
+		overlapcheck values(#{MEMBER_ID},#{PRODUCT_NUM})
+	</insert>
+
+	<!--리뷰리스트 불러오기 -->
+	<select id="reviewList" parameterType="review"
+		resultType="review">
+		select * from product_review where
+		product_num=#{PRODUCT_NUM}
+	</select>
+
+	<select id="listCount" resultType="int">
+		select count(*) from product
+	</select>
+	<!--쇼핑폼 페이징 -->
+	<select id="shoppingFormPaging" resultType="product"
+		parameterType="page1">
+		select productList.* from productList where
+		productList.rn between #{startRow} and #{endRow}
+	</select>
+
+	<!--카테고리 카운트 -->
+	<select id="categoryCount" resultType="int">
+		select count(*) from
+		product where
+		product_category like #{category}
+	</select>
+
+	<!--카테고리 페이징 -->
+	<select id="categoryPaging" resultType="product"
+		parameterType="page1">
+		SELECT * FROM (SELECT ROWNUM AS RNUM, product.* FROM
+		product where product_category like #{PRODUCT_CATEGORY}) A
+		WHERE A.RNUM
+		BETWEEN
+		#{startRow} AND #{endRow}
+	</select>
+
+	<!-- 검색 글 갯수 카운트 -->
+	<select id="listSearchCount" resultType="int">
+		select count(*) from
+		product where product_name like #{searchText}
+	</select>
+
+	<!--상품 검색 -->
+	<select id="productSearch2" resultType="product"
+		parameterType="page1">
+		SELECT * FROM (SELECT ROWNUM AS RNUM, productList.* FROM
+		productList where product_name like #{searchText}) A
+		WHERE A.RNUM
+		BETWEEN
+		#{startRow} AND #{endRow}
+	</select>
+
+	<!--장바구니 카운트 -->
+	<select id="basketListCount" resultType="int">
+		select count(*) from
+		cart where member_id=#{MEMBER_ID} AND order_division=1
+	</select>
+
+	<!-- 장바구니 페이징 -->
+	<select id="basketListPaging" resultType="cart"
+		parameterType="page1">
+		SELECT * FROM (SELECT ROWNUM AS RNUM, historyList.* FROM
+		historyList where member_id like #{MEMBER_ID} and order_division=1) A
+		WHERE A.RNUM BETWEEN
+		#{startRow} AND #{endRow}
+	</select>
+
+	<!--리뷰 카운트 -->
+	<select id="reviewCount" resultType="int">
+		select count(*) from
+		product_review where product_num=#{PRODUCT_NUM}
+	</select>
+
+	<!--리뷰 페이징 -->
+	<select id="reviewPaging" resultType="review"
+		parameterType="page2">
+		SELECT * FROM (SELECT ROWNUM AS RNUM, product_review.* FROM
+		product_review where product_num=#{PRODUCT_NUM}) A
+		WHERE A.RNUM BETWEEN
+		#{startRow} AND #{endRow}
+	</select>
+
+	<!--구매내역 카운트 -->
+	<select id="historyListCount" resultType="int">
+		select count(*) from
+		cart where member_id=#{MEMBER_ID} and order_division=2
+	</select>
+
+	<!--구매내역 페이징 -->
+	<select id="historyList" resultType="cart" parameterType="page1">
+		SELECT
+		* FROM (SELECT ROWNUM AS RNUM, historyList.* FROM
+		historyList where
+		member_id like #{MEMBER_ID} and order_division=2) A
+		WHERE A.RNUM
+		BETWEEN
+		#{startRow} AND #{endRow}
+	</select>
+</mapper>

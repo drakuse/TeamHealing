@@ -1,6 +1,110 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
- <mapper namespace="Member">
- 
- </mapper>
+<mapper namespace="Member">
+	<!-- 회원 가입 처리 (일반 회원) -->
+	<insert id="memberJoin" parameterType="member">
+		INSERT INTO MEMBER VALUES(
+		#{MEMBER_ID}, #{MEMBER_PASS}, #{MEMBER_NAME}, #{MEMBER_AGE},
+		#{MEMBER_PHONE}, #{MEMBER_EMAIL}, #{MEMBER_POSTCODE},
+		#{MEMBER_JIBUNADDRESS}, #{MEMBER_DETAILADDRESS},
+		#{MEMBER_DIVISION},
+		null, null
+		)
+	</insert>
+
+	<!-- 로그인 처리 -->
+	<select id="memberLogin" parameterType="member"
+		resultType="member">
+		SELECT * FROM MEMBER WHERE MEMBER_ID=#{MEMBER_ID} AND
+		MEMBER_PASS=#{MEMBER_PASS}
+	</select>
+
+	<!-- 회원 가입 처리(업자 회원) -->
+	<insert id="memberJoin2" parameterType="member">
+		INSERT INTO MEMBER
+		VALUES(
+		#{MEMBER_ID}, #{MEMBER_PASS}, #{MEMBER_NAME}, #{MEMBER_AGE},
+		#{MEMBER_PHONE}, #{MEMBER_EMAIL}, #{MEMBER_POSTCODE},
+		#{MEMBER_JIBUNADDRESS}, #{MEMBER_DETAILADDRESS},
+		#{MEMBER_DIVISION},
+		#{MEMBER_BUSINESS}, #{MEMBER_COMPANY}
+		)
+	</insert>
+
+	<!-- 정보변경 전 비밀번호 확인 쿼리 -->
+	<select id="memberModifyCheck" parameterType="member"
+		resultType="member">
+		SELECT * FROM MEMBER WHERE MEMBER_ID=#{MEMBER_ID} AND
+		MEMBER_PASS=#{MEMBER_PASS}
+	</select>
+
+	<!-- 정보 변경 처리 쿼리(일반 회원) -->
+	<update id="memberModify" parameterType="member">
+		UPDATE MEMBER SET
+		MEMBER_PASS=#{MEMBER_PASS},
+		MEMBER_NAME=#{MEMBER_NAME},
+		MEMBER_PHONE=#{MEMBER_PHONE},
+		MEMBER_EMAIL=#{MEMBER_EMAIL},
+		MEMBER_POSTCODE=#{MEMBER_POSTCODE},
+		MEMBER_JIBUNADDRESS=#{MEMBER_JIBUNADDRESS},
+		MEMBER_DETAILADDRESS=#{MEMBER_DETAILADDRESS}
+		WHERE
+		MEMBER_ID=#{MEMBER_ID}
+	</update>
+
+	<!-- 회원관리 목록 쿼리 -->
+	<select id="memberList" resultType="member">
+		SELECT * FROM MEMBER
+	</select>
+
+	<!-- 회원삭제 쿼리 -->
+	<delete id="memberDelete">
+		DELETE FROM MEMBER WHERE MEMBER_ID=#{MEMBER_ID}
+	</delete>
+
+	<!-- 업자회원 승인 쿼리 -->
+	<update id="memberApporve" parameterType="member">
+		UPDATE MEMBER SET
+		MEMBER_DIVISION=3 WHERE MEMBER_ID=#{MEMBER_ID}
+	</update>
+
+	<!-- 아이디 중복확인 -->
+	<select id="idOverlap" parameterType="member"
+		resultType="member">
+		SELECT *
+		FROM MEMBER WHERE MEMBER_ID=#{MEMBER_ID}
+	</select>
+
+	<!-- 이메일 인증 키 저장 -->
+	<insert id="overKey" parameterType="String">
+		INSERT INTO MAILKEY
+		VALUES(#{KEY})
+	</insert>
+
+	<!-- 이메일 인증 키 비교 -->
+	<select id="checkKey" parameterType="String" resultType="String">
+		SELECT *
+		FROM MAILKEY WHERE MKEY=#{KEY}
+	</select>
+
+
+	<!-- 내 스크랩 목록 -->
+	<select id="myScrap" parameterType="boardScrap"
+		resultType="boardScrap">
+		SELECT * FROM INFO_SCRAP WHERE MEMBER_ID=#{MEMBER_ID}
+	</select>
+
+
+	<!-- 내가 쓴 리뷰 -->
+	<select id="myReview" parameterType="boardReview"
+		resultType="boardReview">
+		SELECT * FROM INFO_REVIEW WHERE MEMBER_ID=#{MEMBER_ID}
+	</select>
+
+	<!-- 스크랩 삭제 처리 -->
+	<delete id="scrapDelete" parameterType="BoardScrap">
+		DELETE INFO_SCRAP WHERE
+		INFO_NUM=#{INFO_NUM} AND MEMBER_ID=#{MEMBER_ID}
+	</delete>
+</mapper>
