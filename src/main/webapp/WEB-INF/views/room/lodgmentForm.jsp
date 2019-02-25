@@ -28,6 +28,41 @@
 	======================================================= -->
 <link rel="stylesheet"
 	href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" />
+<!-- 페이지 버튼 css -->
+<style>
+.button1 {
+	width: 35px;
+	height: 35px;
+	background-color: #f8585b;
+	border: none;
+	color: #fff;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 15px;
+	margin: 4px;
+	cursor: pointer;
+	background-color: #f8585b;
+	border-radius: 10px;
+}
+
+.btn2 {
+	width: 35px;
+	height: 35px;
+	background-color: #f8585b;
+	border: none;
+	color: #fff;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 15px;
+	margin: 4px;
+	cursor: pointer;
+	background-color: #f8585b;
+	border-radius: 10px;
+	disabled;
+}
+</style>
 <style>
 * {
 	box-sizing: border-box;
@@ -363,8 +398,8 @@ input::-moz-placeholder {
 												onclick="test(${cnt.index})">방보기</a>
 										</h1>
 										<c:if test="${co.COMPANY_IMAGENAME ne null}">
-											<a class="hover-wrap fancybox"> </a>
-											<img src="./resources/companyImage/${co.COMPANY_IMAGENAME}">
+											<img width="100%" height="100%"
+												src="./resources/companyImage/${co.COMPANY_IMAGENAME}">
 										</c:if>
 										<h4>
 											<span class="star-rating"> <span
@@ -392,37 +427,40 @@ input::-moz-placeholder {
 					<!--페이지  -->
 					<div style="width: 340px; margin: auto;">
 						<c:if test="${pageVO.page>=1 }">
+							<!-- 이전 -->
 							<c:choose>
 								<c:when test="${pageVO.page<=1 }">
-									<input type="button" value="[이전]" disabled>
+									<input type="button" class="btn btn2" disabled value="◀">
 								</c:when>
 								<c:when test="${pageVO.page>1 }">
-									<input type="button" onclick="movePage(${pageVO.page-1 })"
-										value="[이전]">
+									<input type="button" class="button1"
+										onclick="movePage(${pageVO.page-1 })" value="◀">
 								</c:when>
 							</c:choose>
 
 							<!-- 페이지 번호 -->
 							<c:forEach begin="${pageVO.startPage }" end="${pageVO.endPage }"
 								varStatus="cnt">
+
 								<c:if test="${pageVO.page == cnt.count }">
-									<input type="button" onclick="movePage(${cnt.count })"
-										value="${cnt.count }" disabled>
+									<input type="button" class="btn btn2" value="${cnt.count }"
+										disabled>
 								</c:if>
 								<c:if test="${pageVO.page != cnt.count }">
-									<input type="button" onclick="movePage(${cnt.count })"
-										value="${cnt.count }">
+									<input type="button" class="button1"
+										onclick="movePage(${cnt.count })" value="${cnt.count }">
 								</c:if>
+
 							</c:forEach>
 
 							<!-- 다음 -->
 							<c:choose>
 								<c:when test="${pageVO.page>=pageVO.maxPage }">
-									<input type="button" value="[다음]" disabled>
+									<input type="button" class="btn btn2" disabled value="▶">
 								</c:when>
 								<c:when test="${pageVO.page<pageVO.maxPage }">
-									<input type="button" onclick="movePage(${pageVO.page+1 })"
-										value="[다음]">
+									<input type="button" class="button1"
+										onclick="movePage(${pageVO.page+1 })" value="▶">
 								</c:when>
 							</c:choose>
 						</c:if>

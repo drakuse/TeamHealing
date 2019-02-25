@@ -4,7 +4,7 @@
 <mapper namespace="Member">
 	<!-- 회원 가입 처리 (일반 회원) -->
 	<insert id="memberJoin" parameterType="member">
-		INSERT INTO MEMBER VALUES(
+		INSERT INTO MEMBER VALUES(-
 		#{MEMBER_ID}, #{MEMBER_PASS}, #{MEMBER_NAME}, #{MEMBER_AGE},
 		#{MEMBER_PHONE}, #{MEMBER_EMAIL}, #{MEMBER_POSTCODE},
 		#{MEMBER_JIBUNADDRESS}, #{MEMBER_DETAILADDRESS},

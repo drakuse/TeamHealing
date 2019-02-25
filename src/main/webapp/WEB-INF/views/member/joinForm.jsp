@@ -796,7 +796,7 @@
 					<div class="form-group">
 						<label for="MEMBER_COMPANY">업소명</label> <input type="text"
 							class="form-control" id="MEMBER_COMPANY" name="MEMBER_COMPANY"
-							placeholder="사업자 번호" required="required">
+							placeholder="업소명" required="required">
 					</div>
 				</c:otherwise>
 			</c:choose>

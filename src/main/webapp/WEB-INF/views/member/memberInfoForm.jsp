@@ -89,7 +89,7 @@
 									</div>
 								</div>
 								<div class="box-bottom">									
-											<a href='cartForm2?page=1'>장바구니</a> / 
+											<a href='cartForm2?page=1'>장바구니/</a>
 											<a href="history?page=1">구매내역</a>										
 								</div>
 							</div>

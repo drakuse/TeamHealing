@@ -555,7 +555,8 @@ table {
 					<div class="form-group">
 						<label for="MEMBER_ID">아이디 </label> <input type="text"
 							class="form-control" id="MEMBER_ID" name="MEMBER_ID"
-							placeholder="아이디" required="required" value="${MEMBER_ID }">
+							placeholder="아이디" required="required" value="${MEMBER_ID }"
+							readonly="readonly">
 					</div>
 
 					<div class="form-group">
@@ -625,7 +626,8 @@ table {
 					<div class="form-group">
 						<label for="MEMBER_ID">아이디 </label> <input type="text"
 							class="form-control" id="MEMBER_ID" name="MEMBER_ID"
-							placeholder="아이디" required="required" value="${MEMBER_ID }">
+							placeholder="아이디" required="required" value="${MEMBER_ID }"
+							readonly="readonly">
 					</div>
 
 					<div class="form-group">

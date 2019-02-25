@@ -250,7 +250,6 @@ public class ShoppingService {
 		String MEMBER_ID = (String) session.getAttribute("MEMBER_ID");
 		cartVO.setMEMBER_ID(MEMBER_ID);
 		System.out.println(cartVO.toString() + "장바구니 등록후 페이지보기");
-
 		shoppingDAO.cart(cartVO);
 		mav.setViewName("redirect:/cartForm2?page=1");
 		return mav;

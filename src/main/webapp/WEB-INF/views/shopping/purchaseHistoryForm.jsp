@@ -35,6 +35,41 @@
 <!-- Custom Fonts -->
 <link href="./resources/vendor/font-awesome/css/font-awesome.min.css"
 	rel="stylesheet" type="text/css">
+<!-- 페이지 버튼 css -->
+<style>
+.button1 {
+	width: 35px;
+	height: 35px;
+	background-color: #f8585b;
+	border: none;
+	color: #fff;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 15px;
+	margin: 4px;
+	cursor: pointer;
+	background-color: #f8585b;
+	border-radius: 10px;
+}
+
+.btn2 {
+	width: 35px;
+	height: 35px;
+	background-color: #f8585b;
+	border: none;
+	color: #fff;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 15px;
+	margin: 4px;
+	cursor: pointer;
+	background-color: #f8585b;
+	border-radius: 10px;
+	disabled;
+}
+</style>
 </head>
 <body>
 	<header>
@@ -98,45 +133,54 @@
 				</tr>
 			</c:forEach>
 		</table>
+
 		<div style="width: 340px; margin: auto;">
+			<!-- 이전 -->
 			<c:choose>
-				<c:when test="${pageVO.page<=1 }">[이전]&nbsp;</c:when>
+				<c:when test="${pageVO.page<=1 }">
+					<input type="button" class="btn btn2" disabled value="◀">
+				</c:when>
 				<c:when test="${pageVO.page>1 }">
-					<a href="history?page=${pageVO.page-1 }">[이전]</a>&nbsp;
-	</c:when>
+					<input type="button" class="button1"
+						onclick="movePage(${pageVO.page-1 })" value="◀">
+				</c:when>
 			</c:choose>
 
+			<!-- 페이지 번호 -->
 			<c:forEach begin="${pageVO.startPage }" end="${pageVO.endPage }"
-				var="i">
-				<a href="history?page=${i }">${i }</a>
+				varStatus="cnt">
+
+				<c:if test="${pageVO.page == cnt.count }">
+					<input type="button" class="btn btn2" value="${cnt.count }"
+						disabled>
+				</c:if>
+				<c:if test="${pageVO.page != cnt.count }">
+					<input type="button" class="button1"
+						onclick="movePage(${cnt.count })" value="${cnt.count }">
+				</c:if>
+
 			</c:forEach>
+
+			<!-- 다음 -->
 			<c:choose>
-				<c:when test="${pageVO.page>=pageVO.maxPage }">[다음]&nbsp;</c:when>
+				<c:when test="${pageVO.page>=pageVO.maxPage }">
+					<input type="button" class="btn btn2" disabled value="▶">
+				</c:when>
 				<c:when test="${pageVO.page<pageVO.maxPage }">
-					<a href="history?page=${pageVO.page+1 }">[다음]</a>&nbsp;
-	</c:when>
+					<input type="button" class="button1"
+						onclick="movePage(${pageVO.page+1 })" value="▶">
+				</c:when>
 			</c:choose>
 		</div>
-	</div>
 
+
+	</div>
+	<form id="searchInfo" name="searchInfo" action="cartForm2" method="get">
+		<input type="hidden" id="page" name="page">
+	</form>
 	<!-- Bootstrap core JavaScript-->
 	<script src="./resources/vendor/jquery/jquery.min.js"></script>
-	<script src="./resources/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-	<!-- Core plugin JavaScript-->
-	<script src="./resources/vendor/jquery-easing/jquery.easing.min.js"></script>
-
-	<!-- Page level plugin JavaScript-->
-	<script src="./resources/vendor/chart.js/Chart.min.js"></script>
-	<script src="./resources/vendor/datatables/jquery.dataTables.js"></script>
-	<script src="./resources/vendor/datatables/dataTables.bootstrap4.js"></script>
-
-	<!-- Custom scripts for all pages-->
-	<script src="./resources/js/sb-admin.min.js"></script>
-
-	<!-- Demo scripts for this page-->
-	<script src="./resources/js/demo/datatables-demo.js"></script>
-	<script src="./resources/js/demo/chart-area-demo.js"></script>
 	<!-- Placed at the end of the document so the pages load faster -->
 	<script src="./resources/js/jquery.js"></script>
 	<script src="./resources/js/jquery.easing.1.3.js"></script>
@@ -149,9 +193,13 @@
 	<script src="./resources/js/jquery.flexslider.js"></script>
 	<script src="./resources/js/animate.js"></script>
 	<script src="./resources/js/custom.js"></script>
-
-</body>
-<script>
+	<script type="text/javascript">
+function movePage(page){
+	document.getElementById("page").value = page;
+    document.searchInfo.submit();
+}
+</script>
+	<script>
 function cmWrite(PRODUCT_NUM){
 var userId = '${sessionScope.MEMBER_ID}';
 if(userId =="" || userId == null){
@@ -163,4 +211,5 @@ if(userId =="" || userId == null){
 	}
 }
 </script>
+</body>
 </html>

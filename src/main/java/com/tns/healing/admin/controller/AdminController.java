@@ -93,6 +93,7 @@ public class AdminController {
 		return mav;
 	}
 
+	// 회사 승인 요청
 	@RequestMapping(value = "/companyApprove", method = RequestMethod.GET)
 	public ModelAndView companyApprove(@RequestParam("companyNum") String company_num) {
 		mav = new ModelAndView();

@@ -11,7 +11,7 @@
 	<select id="categorySearch" resultType="product"
 		parameterType="product">
 		select * from product where
-		PRODUCT_CATEGORY=#{PRODUCT_CATEGORY}
+		PRODUCT_CATEGORY=#{PRODUCT_CATEGORY} ORDER BY PRODUCT_NUM DESC
 	</select>
 	<!--제목검색 -->
 	<select id="searchText" resultType="product"
@@ -188,7 +188,7 @@
 		product where product_category like #{PRODUCT_CATEGORY}) A
 		WHERE A.RNUM
 		BETWEEN
-		#{startRow} AND #{endRow}
+		#{startRow} AND #{endRow} ORDER BY PRODUCT_NUM DESC
 	</select>
 
 	<!-- 검색 글 갯수 카운트 -->
@@ -231,9 +231,11 @@
 	<!--리뷰 페이징 -->
 	<select id="reviewPaging" resultType="review"
 		parameterType="page2">
-		SELECT * FROM (SELECT ROWNUM AS RNUM, product_review.* FROM
+		SELECT * FROM (SELECT ROWNUM AS RNUM, product_review.*
+		FROM
 		product_review where product_num=#{PRODUCT_NUM}) A
-		WHERE A.RNUM BETWEEN
+		WHERE A.RNUM
+		BETWEEN
 		#{startRow} AND #{endRow}
 	</select>
 

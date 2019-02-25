@@ -407,13 +407,14 @@ input::-moz-placeholder {
 										<span>${ro.ROOM_NAME}</span>
 									</h3>
 									<h6>
-										<img src="./resources/roomImage/${ro.ROOM_IMAGENAME}"
-											width="500" height="250">
-
+										<c:if test="${ro.ROOM_IMAGENAME ne null}">
+											<img src="./resources/roomImage/${ro.ROOM_IMAGENAME}"
+												width="500" height="250">
+										</c:if>
 									</h6>
 									<h5>
-										숙박인원 : ${ro.ROOM_LIMIT } <br>
-										<br> 가격 : ${ro.ROOM_PRICE }
+										숙박인원 : ${ro.ROOM_LIMIT } <br> <br> 가격 :
+										${ro.ROOM_PRICE }
 									</h5>
 									<a href="#" class="btn btn-theme btn-rounded"
 										onclick="openReview(${cnt.index}, ${fn:length(roomList)})">리뷰보기</a>

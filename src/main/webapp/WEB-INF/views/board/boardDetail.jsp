@@ -135,7 +135,7 @@
 					<label for="INFO_CONTENT" class="col-sm-2 control-label">사진</label>
 					<div class="col-sm-10">
 						<img src="./resources/uploadFile/${boardDetail.INFO_IMAGE_NAME }"
-							width="73" height="70">
+							width="800" height="680">
 					</div>
 				</div>
 			</c:if>
@@ -162,8 +162,7 @@
 		</form>
 	</div>
 
-	<div
-		style="dorder: 1px dashed #BDBDBD; width: 80%; height: auto; margin: auto;">
+	<div style="width: 900px; margin: auto;">
 		<br />
 		<form action="reviewWrite" id="writeCommentForm" method="post">
 			<input type="hidden" name="page" id="page" value="${page }">

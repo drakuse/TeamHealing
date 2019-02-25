@@ -56,7 +56,7 @@ public class BoardService {
 		pageVO.setPage(page);
 		pageVO.setStartRow(startRow);
 		pageVO.setEndRow(endRow);
-		int listCount = boardDAO.listCount();
+		int listCount = boardDAO.listCount(); // 글 갯수 카운트
 		pageVO.setListCount(listCount);
 
 		// 페이지 계산
@@ -140,8 +140,7 @@ public class BoardService {
 			out.println("history.go(-1);</script>");
 			out.close();
 		} else {
-
-			int boardDelete = boardDAO.boardDelete(iNFO_NUM);
+			int boardDelete = boardDAO.boardDelete(iNFO_NUM); // 게시판 삭제
 
 			boardDAO.boardReviewDelete(iNFO_NUM); // 게시판 댓글 삭제
 			boardDAO.boardReviewCountDelete(iNFO_NUM); // 댓글 확인 여부 DB 데이터 삭제
@@ -152,7 +151,6 @@ public class BoardService {
 				out.println("alert('삭제성공');");
 				out.println("location.href='boardForm?page=1';</script>");
 				out.close();
-
 			} else {
 				out.println("<script>");
 				out.println("alert('삭제실패');");

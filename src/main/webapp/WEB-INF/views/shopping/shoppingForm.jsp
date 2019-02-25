@@ -38,6 +38,41 @@
 <!-- Custom Fonts -->
 <link href="./resources/vendor/font-awesome/css/font-awesome.min.css"
 	rel="stylesheet" type="text/css">
+<!-- 페이지 버튼 css -->
+<style>
+.button1 {
+	width: 35px;
+	height: 35px;
+	background-color: #f8585b;
+	border: none;
+	color: #fff;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 15px;
+	margin: 4px;
+	cursor: pointer;
+	background-color: #f8585b;
+	border-radius: 10px;
+}
+
+.btn2 {
+	width: 35px;
+	height: 35px;
+	background-color: #f8585b;
+	border: none;
+	color: #fff;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 15px;
+	margin: 4px;
+	cursor: pointer;
+	background-color: #f8585b;
+	border-radius: 10px;
+	disabled;
+}
+</style>
 <script>
 	function allSearch(page) {
 		location.href = "allSearch?page="+page;
@@ -60,10 +95,10 @@
 </script>
 <style>
 input[type=text] {
-  border: 2px solid black;
-  border-radius: 4px;
-  width:200px;
-  height:40px;
+	border: 2px solid black;
+	border-radius: 4px;
+	width: 200px;
+	height: 40px;
 }
 </style>
 <title>쇼핑폼</title>
@@ -110,17 +145,23 @@ input[type=text] {
 	</header>
 	<div style="width: 340px; margin: auto;">
 		<form action="searchText" name="searchText" id="searchText">
-			<input type="text" id="searchText" name="searchText" placeholder="상품명 검색"
-				value="${ searchText}"> <input type="hidden" name="page"
-				id="page" value="1"> <input type="submit" class="btn btn-success" value="검색">
+			<input type="text" id="searchText" name="searchText"
+				placeholder="상품명 검색" value="${ searchText}"> <input
+				type="hidden" name="page" id="page" value="1"> <input
+				type="submit" class="btn btn-success" value="검색">
 		</form>
 
 	</div>
-	<input type="button" class="btn btn-primary" onclick="allSearch(1)" value="전체" />
-	<input type="button" class="btn btn-primary" onclick="tent(1)" value="텐트" />
-	<input type="button" class="btn btn-primary" onclick="tarp(1)" value="타프" />
-	<input type="button" class="btn btn-primary" onclick="cooking(1)" value="취사용품" />
-	<input type="button" class="btn btn-primary" onclick="camping(1)" value="캠핑용품" />
+	<input type="button" class="btn btn-primary" onclick="allSearch(1)"
+		value="전체" />
+	<input type="button" class="btn btn-primary" onclick="tent(1)"
+		value="텐트" />
+	<input type="button" class="btn btn-primary" onclick="tarp(1)"
+		value="타프" />
+	<input type="button" class="btn btn-primary" onclick="cooking(1)"
+		value="취사용품" />
+	<input type="button" class="btn btn-primary" onclick="camping(1)"
+		value="캠핑용품" />
 	<br>
 
 	<!-- 상품목록 표시부분 -->
@@ -160,96 +201,144 @@ input[type=text] {
 			</div>
 		</div>
 	</div>
+
 	<div style="width: 340px; margin: auto;">
-		
 		<c:choose>
-			<c:when test="${pageVO.page<=1 }"><input type="button" value="이전" disabled></c:when>
+			<c:when test="${pageVO.page<=1 }">
+				<input type="button" class="btn btn2" value="◀" disabled>
+			</c:when>
 			<c:when test="${pageVO.page>1 }">
 				<c:if test="${ searchText eq null}">
 					<c:choose>
 						<c:when test="${pageVO.PRODUCT_CATEGORY eq '텐트'}">
-							<input type="button" onclick="tent(${pageVO.page-1})" value="이전">
+							<input type="button" class="button1"
+								onclick="tent(${pageVO.page-1})" value="◀">
 						</c:when>
 						<c:when test="${pageVO.PRODUCT_CATEGORY eq '타프'}">
-							<input type="button" onclick="tarp(${pageVO.page-1})" value="이전">
+							<input type="button" class="button1"
+								onclick="tarp(${pageVO.page-1})" value="◀">
 						</c:when>
 						<c:when test="${pageVO.PRODUCT_CATEGORY eq '취사용품'}">
-							<input type="button" onclick="cooking(${pageVO.page-1})"
-								value="이전">
+							<input type="button" class="button1"
+								onclick="cooking(${pageVO.page-1})" value="◀">
 						</c:when>
 						<c:when test="${pageVO.PRODUCT_CATEGORY eq '캠핑용품'}">
-							<input type="button" onclick="camping(${pageVO.page-1})"
-								value="이전">
+							<input type="button" class="button1"
+								onclick="camping(${pageVO.page-1})" value="◀">
 						</c:when>
 						<c:otherwise>
-							<input type="button" onclick="allSearch(${pageVO.page-1})"
-								value="이전">
+							<input type="button" class="button1"
+								onclick="allSearch(${pageVO.page-1})" value="◀">
 						</c:otherwise>
 					</c:choose>
 				</c:if>
 				<c:if test="${ searchText ne null}">
-					<a
-						href="searchText?page=${pageVO.page-1 }&searchText=${ searchText }">이전</a>
+					<input
+						onclick="location.href='searchText?page=${pageVO.page-1 }&searchText=${ searchText }'"
+						class="button1" value="◀">
 				</c:if>
 
 			</c:when>
 		</c:choose>
-<!--페이지 번호  --> 
+		<!--페이지 번호  -->
 		<c:forEach begin="${pageVO.startPage }" end="${pageVO.endPage }"
-			var="i">
+			varStatus="cnt">
 			<c:if test="${ searchText eq null}">
-				<c:choose>
-					<c:when test="${pageVO.PRODUCT_CATEGORY eq '텐트'}">
-						<input type="button" onclick="tent(${i})" value="${i}">
-					</c:when>
-					<c:when test="${pageVO.PRODUCT_CATEGORY eq '타프'}">
-						<input type="button" onclick="tarp(${i})" value="${i}">
-					</c:when>
-					<c:when test="${pageVO.PRODUCT_CATEGORY eq '취사용품'}">
-						<input type="button" onclick="cooking(${i})" value="${i}">
-					</c:when>
-					<c:when test="${pageVO.PRODUCT_CATEGORY eq '캠핑용품'}">
-						<input type="button" onclick="camping(${i})" value="${i}">
-					</c:when>
-					<c:otherwise>
-						<input type="button" onclick="allSearch(${i})" value="${i}">
-					</c:otherwise>
-				</c:choose>
+				<c:if test="${pageVO.page == cnt.count }">
+					<c:choose>
+						<c:when test="${pageVO.PRODUCT_CATEGORY eq '텐트'}">
+							<input type="button" class="btn btn2" disabled
+								onclick="tent(${cnt.count})" value="${cnt.count}">
+						</c:when>
+						<c:when test="${pageVO.PRODUCT_CATEGORY eq '타프'}">
+							<input type="button" class="btn btn2" disabled
+								onclick="tarp(${cnt.count})" value="${cnt.count}">
+						</c:when>
+						<c:when test="${pageVO.PRODUCT_CATEGORY eq '취사용품'}">
+							<input type="button" class="btn btn2" disabled
+								onclick="cooking(${cnt.count})" value="${cnt.count}">
+						</c:when>
+						<c:when test="${pageVO.PRODUCT_CATEGORY eq '캠핑용품'}">
+							<input type="button" class="btn btn2" disabled
+								onclick="camping(${cnt.count})" value="${cnt.count}">
+						</c:when>
+						<c:otherwise>
+							<input type="button" class="btn btn2" disabled
+								onclick="allSearch(${cnt.count})" value="${cnt.count}">
+						</c:otherwise>
+					</c:choose>
+				</c:if>
+				<c:if test="${pageVO.page != cnt.count }">
+					<c:choose>
+						<c:when test="${pageVO.PRODUCT_CATEGORY eq '텐트'}">
+							<input type="button" class="button1" onclick="tent(${cnt.count})"
+								value="${cnt.count}">
+						</c:when>
+						<c:when test="${pageVO.PRODUCT_CATEGORY eq '타프'}">
+							<input type="button" class="button1" onclick="tarp(${cnt.count})"
+								value="${cnt.count}">
+						</c:when>
+						<c:when test="${pageVO.PRODUCT_CATEGORY eq '취사용품'}">
+							<input type="button" class="button1"
+								onclick="cooking(${cnt.count})" value="${cnt.count}">
+						</c:when>
+						<c:when test="${pageVO.PRODUCT_CATEGORY eq '캠핑용품'}">
+							<input type="button" class="button1"
+								onclick="camping(${cnt.count})" value="${cnt.count}">
+						</c:when>
+						<c:otherwise>
+							<input type="button" class="button1"
+								onclick="allSearch(${cnt.count})" value="${cnt.count}">
+						</c:otherwise>
+					</c:choose>
+				</c:if>
 			</c:if>
 			<c:if test="${ searchText ne null}">
-				<a href="searchText?page=${i }&searchText=${ searchText }">${i}</a>
+				<c:if test="${pageVO.page == cnt.count }">
+					<input class="btn btn2" disabled value="${cnt.count}">
+				</c:if>
+				<c:if test="${pageVO.page != cnt.count }">
+					<input
+						onclick="location.href='searchText?page=${cnt.count }&searchText=${ searchText }'"
+						class="btn btn2" value="${cnt.count}">
+				</c:if>
 			</c:if>
 		</c:forEach>
-		
+
 		<!--다음  -->
 		<c:choose>
-			<c:when test="${pageVO.page>=pageVO.maxPage }"><input type="button" value="다음" disabled></c:when>
+			<c:when test="${pageVO.page>=pageVO.maxPage }">
+				<input type="button" class="btn btn2" value="▶" disabled>
+			</c:when>
 			<c:when test="${pageVO.page<pageVO.maxPage }">
 				<c:if test="${ searchText eq null}">
 					<c:choose>
 						<c:when test="${pageVO.PRODUCT_CATEGORY eq '텐트'}">
-							<input type="button" onclick="tent(${pageVO.page+1})" value="다음">
+							<input type="button" class="button1"
+								onclick="tent(${pageVO.page+1})" value="▶">
 						</c:when>
 						<c:when test="${pageVO.PRODUCT_CATEGORY eq '타프'}">
-							<input type="button" onclick="tarp(${pageVO.page+1})" value="다음">
+							<input type="button" class="button1"
+								onclick="tarp(${pageVO.page+1})" value="▶">
 						</c:when>
 						<c:when test="${pageVO.PRODUCT_CATEGORY eq '취사용품'}">
-							<input type="button" onclick="cooking(${pageVO.page+1})"
-								value="다음">
+							<input type="button" class="button1"
+								onclick="cooking(${pageVO.page+1})" value="▶">
 						</c:when>
 						<c:when test="${pageVO.PRODUCT_CATEGORY eq '캠핑용품'}">
-							<input type="button" onclick="camping(${pageVO.page+1})"
-								value="다음">
+							<input type="button" class="button1"
+								onclick="camping(${pageVO.page+1})" value="▶">
 						</c:when>
 						<c:otherwise>
-							<input type="button" onclick="allSearch(${pageVO.page+1})"
-								value="다음">
+							<input type="button" class="button1"
+								onclick="allSearch(${pageVO.page+1})" value="▶">
 						</c:otherwise>
 					</c:choose>
 				</c:if>
 				<c:if test="${ searchText ne null}">
-					<a
-						href="searchText?page=${pageVO.page+1 }&searchText=${ searchText }">다음</a>
+					<input
+						onclick="location.href='searchText?page=${pageVO.page+1 }&searchText=${ searchText }'"
+						class="button1" value="▶">
 				</c:if>
 			</c:when>
 		</c:choose>

@@ -94,7 +94,6 @@ public class BoardController {
 			bFile.transferTo(new File(fileLocation + fileName));
 		}
 		boardVO.setINFO_IMAGE_NAME(bFile.getOriginalFilename());
-		System.out.println("수정 투스ㅡ트링 " + boardVO.toString());
 		mav = bs.boardModify(boardVO, response, page);
 		return mav;
 	}

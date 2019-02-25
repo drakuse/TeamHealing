@@ -68,10 +68,8 @@ public class MemberSerivce {
 				out.println("alert('관리자 승인을 기다려주세요');");
 				out.println("location.href='home';</script>");
 				out.close();
-				mav.setViewName("home");
 			}
 		}
-
 		return mav;
 	}
 
@@ -89,6 +87,7 @@ public class MemberSerivce {
 			out.close();
 		} else { // 로그인 성공
 			int MEMBER_DIVISION = loginMember.getMEMBER_DIVISION();
+			// 일반 회원인지 사장회원인지 구분(승인대기상태 2)
 
 			if (MEMBER_DIVISION == 2) {
 				out.println("<script>");

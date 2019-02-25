@@ -39,6 +39,41 @@
 <!-- Custom Fonts -->
 <link href="./resources/vendor/font-awesome/css/font-awesome.min.css"
 	rel="stylesheet" type="text/css">
+<!-- 페이지 버튼 css -->
+<style>
+.button1 {
+	width: 35px;
+	height: 35px;
+	background-color: #f8585b;
+	border: none;
+	color: #fff;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 15px;
+	margin: 4px;
+	cursor: pointer;
+	background-color: #f8585b;
+	border-radius: 10px;
+}
+
+.btn2 {
+	width: 35px;
+	height: 35px;
+	background-color: #f8585b;
+	border: none;
+	color: #fff;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 15px;
+	margin: 4px;
+	cursor: pointer;
+	background-color: #f8585b;
+	border-radius: 10px;
+	disabled;
+}
+</style>
 </head>
 <body>
 	<!-- start header -->
@@ -91,6 +126,9 @@
 			<thead>
 				<c:forEach var="board" items="${boardBest }">
 					<tr>
+						<th colspan="7">베스트 글</th>
+					</tr>
+					<tr>
 						<td>${board.INFO_NUM }</td>
 						<td><a
 							href="boardDetail?INFO_NUM=${board.INFO_NUM}&page=${pageVO.page}">${board.INFO_TITLE }</a></td>
@@ -137,33 +175,41 @@
 			<!-- 이전 -->
 			<c:choose>
 				<c:when test="${pageVO.page<=1 }">
-					<input type="button" disabled value="이전">
+					<input type="button" class="btn btn2" disabled value="◀">
 				</c:when>
 				<c:when test="${pageVO.page>1 }">
-					<input type="button" onclick="movePage(${pageVO.page-1 })"
-						value="이전">
+					<input type="button" class="button1"
+						onclick="movePage(${pageVO.page-1 })" value="◀">
 				</c:when>
 			</c:choose>
 
 			<!-- 페이지 번호 -->
 			<c:forEach begin="${pageVO.startPage }" end="${pageVO.endPage }"
-				var="i">
-				<input type="button" onclick="movePage(${i })" value="${i }">
+				varStatus="cnt">
+
+				<c:if test="${pageVO.page == cnt.count }">
+					<input type="button" class="btn btn2" value="${cnt.count }"
+						disabled>
+				</c:if>
+				<c:if test="${pageVO.page != cnt.count }">
+					<input type="button" class="button1"
+						onclick="movePage(${cnt.count })" value="${cnt.count }">
+				</c:if>
+
 			</c:forEach>
 
 			<!-- 다음 -->
 			<c:choose>
 				<c:when test="${pageVO.page>=pageVO.maxPage }">
-					<input type="button" disabled value="다음">
+					<input type="button" class="btn btn2" disabled value="▶">
 				</c:when>
 				<c:when test="${pageVO.page<pageVO.maxPage }">
-					<input type="button" onclick="movePage(${pageVO.page+1 })"
-						value="다음">
+					<input type="button" class="button1"
+						onclick="movePage(${pageVO.page+1 })" value="▶">
 				</c:when>
 			</c:choose>
 		</div>
 	</div>
-	<a href="#" class="scrollup"><i class="fa fa-angle-up active"></i></a>
 	<!-- javascript
     ================================================== -->
 	<!-- Placed at the end of the document so the pages load faster -->
